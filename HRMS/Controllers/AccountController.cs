@@ -151,7 +151,19 @@ namespace HRMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Name,
+                    Email = model.Email ,
+                    Name = model.Name,
+                    Address = model.Address,
+                    SecurityCode = model.SecurityCode,
+                    Mobile = model.Mobile,
+                    
+                    
+
+
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

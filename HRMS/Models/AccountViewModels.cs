@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HRMS.Models
@@ -64,6 +65,30 @@ namespace HRMS.Models
 
     public class RegisterViewModel
     {
+
+
+
+
+
+
+        [Required]
+     
+        [Display(Name = "Name")]
+        public String Name { get; set; }
+
+
+
+
+        [Required]
+      
+        public String Mobile { get; set; }
+        [Required]
+        public String SecurityCode { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
