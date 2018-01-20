@@ -1,14 +1,12 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Data.Entity;
+using HRMS.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using HRMS.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace HRMS.Controllers
 {
@@ -17,12 +15,13 @@ namespace HRMS.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +33,9 @@ namespace HRMS.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -75,7 +74,9 @@ namespace HRMS.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            var userName = db.Users.SingleOrDefault(x => x.Email == model.Email).Name;
+            var result = await SignInManager.PasswordSignInAsync(userName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -120,7 +121,7 @@ namespace HRMS.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -149,31 +150,106 @@ namespace HRMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+
+
+
+
+
+            var alreadyUsedUserName = db.Users.SingleOrDefault(x => x.Name == model.Name);
+            if (alreadyUsedUserName != null)
+            {
+                @ViewBag.alreadyUsedUserName = "User Name was used by other";
+                return View();
+
+            }
+
+            var alreadyUsedMobile = db.Users.SingleOrDefault(x => x.Mobile == model.Mobile);
+            if (alreadyUsedMobile != null)
+            {
+                @ViewBag.alreadyUsedMobile = "Mobile Number was used by other";
+                return View();
+
+            }
+
+            var alreadyUsedEmail = db.Users.SingleOrDefault(x => x.Email == model.Email);
+            if (alreadyUsedEmail != null)
+            {
+                @ViewBag.EmailUsed = "Email was used by other";
+                return View();
+
+            }
+
+            var alreadyUsedSecrectCode = db.Users.SingleOrDefault(x => x.SecurityCode == model.SecurityCode);
+
+            if (alreadyUsedSecrectCode != null)
+            {
+                @ViewBag.SecrectkeyUsed = "This Secrect Key was used Please contact with Admin";
+                return View();
+
+            }
+            var dbSecrectCode = db.SecurityCodes.SingleOrDefault(x => x.Code == model.SecurityCode);
+
+            if (dbSecrectCode == null)
+            {
+                @ViewBag.InvalidKey = "Invalid Secrect Key Please contact with Admin";
+                return View();
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
                 {
                     UserName = model.Name,
-                    Email = model.Email ,
+                    Email = model.Email,
                     Name = model.Name,
                     Address = model.Address,
                     SecurityCode = model.SecurityCode,
                     Mobile = model.Mobile,
-                    
-                    
+
+
 
 
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    dbSecrectCode.Flag = "Used";
+                    db.Entry(dbSecrectCode).State = EntityState.Modified;
+                    db.SaveChanges();
 
                     return RedirectToAction("Index", "Home");
                 }

@@ -16,7 +16,11 @@
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Name)
-        </div>
+            <p class="text-danger">
+
+                @ViewBag.alreadyUsedUserName
+            <p>
+</div>
     </div>
 
     <div class="form-group">
@@ -24,14 +28,22 @@
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Mobile)
-        </div>
+            <p class="text-danger">
+
+                @ViewBag.alreadyUsedMobile
+            <p>
+</div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Email)
-        </div>
+            <p class="text-danger">
+
+                @ViewBag.EmailUsed
+            <p>
+</div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
@@ -45,7 +57,13 @@
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.SecurityCode, new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.SecurityCode)
-        </div>
+            <p class="text-danger">
+
+                @ViewBag.SecrectkeyUsed
+                @ViewBag.InvalidKey
+            <p>
+
+</div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
