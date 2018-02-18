@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My Rocket POS</title>
+    <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -17,13 +17,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Rocket POS", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("a", "Index", "Home")</li>
+                    <li>@Html.ActionLink("s", "About", "Home")</li>
+                    <li>@Html.ActionLink("d", "Contact", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -33,13 +33,8 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>
-               
-                <div class="panel panel-primary">
-                    <div class="panel-heading" align="center"> &copy; @DateTime.Now.Year Powered by Ramsoft</div>
-
-                </div>
-            </p>
+            <p>&copy; @DateTime.Now.Year </p>
+           
         </footer>
     </div>
 

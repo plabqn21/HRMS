@@ -13,6 +13,12 @@ namespace HRMS.Controllers
             return View();
         }
 
+        public ActionResult AfterLogIn()
+        {
+            
+
+            return View();
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

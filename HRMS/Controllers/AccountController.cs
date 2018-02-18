@@ -251,7 +251,7 @@ namespace HRMS.Controllers
                     db.Entry(dbSecrectCode).State = EntityState.Modified;
                     db.SaveChanges();
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("AfterLogIn", "Home");
                 }
                 AddErrors(result);
             }
